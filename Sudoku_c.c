@@ -1,9 +1,20 @@
+/*
+ *************************************************** File for windows on windows branch ***************************************************************
+ *				Windows does not support color on terminal so it's off 
+ *
+ *				Windows does not support timers with any precition so it's off 
+ *				
+ *				Windows version with CR-LF line-ending
+ */
+
+
+
 #define Sz 9			//SudSize
 #define SqSz ((Sz)*(Sz))	//SudSize
 #define KSz 3			//Kvadrat Size 3(*3)
 #define mskAll  ((1 << (Sz+1))-2)
 
-#define TTYColor -1		//if your TTY does not support colors turn it of
+#define TTYColor 0	//if your TTY does not support colors turn it of
 
 unsigned char TTyBlueBuf[] = "\x1b[34m"; 
 unsigned char TTyYellBuf[] = "\x1b[33m"; 
@@ -317,7 +328,6 @@ matStB[i] = matSt[i];
 restore() {
 int i,ERROR;
 init();
-printf("Restore ******************************************************************* ");
 for (i=0; i < SqSz; i++) {
     
     if (matB[i] != 0) { ERROR = writeMat(i, matB[i],matStB[i]);  }
@@ -532,27 +542,19 @@ int i,ret=0;
 int main (int argc,int *argv[]) {
 int i,flt,cnt;
 unsigned char *p=possi;
-struct timespec start, end;
-for (cnt=0; cnt<100000;cnt++) {
-i=1;   // 5 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-do {
-//for (i=0; i<6 ;i++) {
-init();
-readPre(i); // kun den nemme 6000 gange
+// struct timespec start, end; //Time spec off on Windows no support 
+for (cnt=0; cnt<1;cnt++) {
 
-//outMat();
+	for (i=0; i<6 ;i++) {
+		init();
+		readPre(i);
 
+		solve();
 
-solve();
-// for (i=0 ;((todo != 0 ) &&   (i < 10) ); i++) { printf("solve()loop: %d\r\n",i); solve();  }  
-
-//outMat();
-//printf("Hej fra 64bit cnt:%d\r\n\n",cnt);
+                outMat();
 
 
-//} //for i
-} while (0);   //for i
+	} //for i
 } //for cnt
-outMat();
 return 0;
 }
