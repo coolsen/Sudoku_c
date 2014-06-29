@@ -1,7 +1,15 @@
-#define Sz 9 //SudSize
-#define SqSz ((Sz)*(Sz)) //SudSize
-#define KSz 3 //Kvadrat Size 3(*3)
+#define Sz 9			//SudSize
+#define SqSz ((Sz)*(Sz))	//SudSize
+#define KSz 3			//Kvadrat Size 3(*3)
 #define mskAll  ((1 << (Sz+1))-2)
+
+#define TTYColor -1		//if your TTY does not support colors turn it of
+
+unsigned char TTyBlueBuf[] = "\x1b[34m"; 
+unsigned char TTyWhiteBuf[] = "\x1b[39m"; 
+
+
+
 #include <stdio.h>
 #include <stdint.h>
 #include <time.h>
@@ -71,16 +79,6 @@ unsigned char fltK[9][9] = {{ 0, 1, 2, 9,10,11,18,19,20},
                             {57,58,59,66,67,68,75,76,77},
                             {60,61,62,69,70,71,78,79,80}};
 
-
-
-         
-
-
-
-
-
-
-
 void inJSONpre(int n) {
 switch(n)
 {
@@ -115,8 +113,8 @@ return;
 } //inJSONpre()
 
 void outMat() {
-        unsigned char  *ptr,lineBuf[80];
-        int i,PSzA=0, PSz; // Printed Size Accumulator, Printed Size (from last call to sprintf()) 
+        unsigned char  *ptr,lineBuf[180];
+        int i,PSzA=0, PSz, PrColor=TTYColor; // Printed Size Accumulator, Printed Size (from last call to sprintf()), PrColor to aviod compilation warning
         printf("\r\n");
         ptr= lineBuf;
         todo=0;
@@ -124,12 +122,23 @@ void outMat() {
                 if (r!= 0 && (r % KSz) == 0 ) printf("----------------------------\r\n");
                 ptr= lineBuf;
         	for (c=0; c < Sz; c++) {
+			PSz=0;
                         if (c!= 0 && (c % KSz) == 0 ) {
 	                	PSz = sprintf (ptr, "|");
 	                	ptr += PSz; 
                         }
-                        if (mat[i] == 0) {PSz = sprintf (ptr, "   "); i++; } //if 0 print " "
-                	else PSz = sprintf (ptr, " %d ",mat[i++]);
+                        if (mat[i] == 0) {
+				PSz = sprintf (ptr, "   ");
+				i++;
+			}
+                	else {  
+				if (PrColor) {
+					PSz = sprintf (ptr, "%s %d %s",TTyBlueBuf,mat[i++],TTyWhiteBuf);
+				}
+				else { 
+					PSz = sprintf (ptr, " %d ",mat[i++]);
+				}
+			}
                 	ptr += PSz; 
                 } //for c
                 printf ("%s\r\n",lineBuf);
@@ -150,18 +159,18 @@ int writeMat(int flt,int n, int st) {
 unsigned short msk,nmsk;
 unsigned int ridx,cidx,kidx;
 
-// printf("mat[%d]= %d  ",flt,mat[flt]);
+if (st != 1) printf("mat[%d]= %d  ",flt,n);
 
 if (mat[flt] != 0) return 4;
 ridx = rN[flt]; // get index of row mask
 cidx = cN[flt]; // get index of col mask
 kidx = kN[flt]; // get index of kvad mask//printf("I writeMat() i=%d n=%d \r\n",i,n);
-//printf("writeMat(): ridx=%d cidx=%d kidx=%d  ",ridx,cidx,kidx);
+//if (st != 1) printf("writeMat(): ridx=%d cidx=%d kidx=%d  ",ridx,cidx,kidx);
 msk = rmsk[ridx]; 
 msk = msk & cmsk[cidx];
 msk = msk & kmsk[kidx];
-//printf ("writeMat(flt=%d,n=%d,,,): msk= %d ",flt,n,msk);
-//printf ("%d->%d ",n,flt);
+//if (st != 1) printf ("writeMat(flt=%d,n=%d,,,): msk= %d ",flt,n,msk);
+//if (st != 1) printf ("%d->%d ",n,flt);
 nmsk = 1 << n ;
 msk = msk & nmsk;
 //printf ("writeMat(flt=%d,n=%d,,,): msk= %d nmsk= %d",flt,n,msk);
@@ -293,6 +302,7 @@ void init() {
 
 backup() {
 int i;
+printf("Backup  ");
 for (i=0; i < SqSz; i++) {
 matB[i] = mat[i];
 matStB[i] = matSt[i];
@@ -301,7 +311,7 @@ matStB[i] = matSt[i];
 restore() {
 int i,ERROR;
 init();
-//printf("Restore  ");
+printf("Restore  ");
 for (i=0; i < SqSz; i++) {
     
     if (matB[i] != 0) { ERROR = writeMat(i, matB[i],matStB[i]);  }
@@ -453,7 +463,7 @@ unsigned char *p=possi;
 int ERROR=0,gSt=0,s,st=2,flt,x,y,i,ci,bi,r;
 status();      // reset 
 
-for (i=0; ((i<10) && (todo !=0)) ; i++ ) {
+for (i=0; ((i<10) && (todo !=0)) ; i++ ) { // i<10 now
 //    printf("solve()loop: %d\r\n",i);
     solveOnePoss(); 
     findNsolveDom();
@@ -465,17 +475,24 @@ for (i=0; ((i<10) && (todo !=0)) ; i++ ) {
     } //for n
     s=status();
     if  (s == 2) break; //todo = 0
-    if  (s == 0 && gSt==1) { // no progress
-  //      outMat(); //******************************** FUSK ******************************
-        restore();
+    if  (s == 0 && gSt>=0) { // no progress
+          if (gSt>1)  {
 
-        printf("Guess wrong i=%d -> %d \r\n",i,r);
-        ERROR = writeMat(bi, r, 2);
-        gSt = 0;
-    }
-    if  (s == 0 && gSt==0) { // no progress
-        
+             restore();
+             ERROR = writeMat(i, *p, 2);
+             gSt--;
+             break;
+          }
+//        restore();
+//     second guess **********************************        
         backup();
+
+//        printf("Guess wrong i=%d -> %d \r\n",i,r);
+//        ERROR = writeMat(bi, r, 2);
+//    }
+//    if  (s == 0 && gSt==0) { // no progress
+        
+//        backup();
         for (i=0; i< SqSz; i++) {
             p=possi;
             c=fltGetPz(possi, i);
@@ -485,16 +502,16 @@ for (i=0; ((i<10) && (todo !=0)) ; i++ ) {
         printf("Guess i=%d -> %d \r\n",i,*p);
         ERROR = writeMat(i, *p, 2);
         p++; bi=i;r=*p;
-        gSt = 1;
-    }
+        gSt++;
+    }//if
 
-}  
-}
-
-
+}  // for i
+} //solve
 
 
-int status() { //returns: 0 if no progress and 1 if some progress 2 if todo=0
+
+
+int status() { //returns: 0 if no progress, and 1 if some progress, 2 if todo=0
 int i,ret=0;
         todo = 0;
         for (i = 1; i < Sz+1; i++) {
@@ -514,11 +531,13 @@ int i,flt,cnt;
 unsigned char *p=possi;
 struct timespec start, end;
 for (cnt=0; cnt<1 ;cnt++) {
-for (i=0; i<6 ;i++) {
+i=5;
+do {
+//for (i=0; i<6 ;i++) {
 init();
 readPre(i); // kun den nemme 6000 gange
 
-//outMat();
+outMat();
 
 
 solve();
@@ -528,7 +547,8 @@ outMat();
 printf("Hej fra 64bit cnt:%d\r\n\n",cnt);
 
 
-} //for i
+//} //for i
+} while (0);   //for i
 } //for cnt
 return 0;
 }
