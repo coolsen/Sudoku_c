@@ -251,13 +251,14 @@ kidx = kN[flt]; // get index of col mask
 msk = rmsk[ridx]; 
 msk = msk & cmsk[cidx];
 msk = msk & kmsk[kidx];
-//printf ("msk= %d \r\n",msk);
+//if (flt == 0) printf ("++hej msk= %03X \r\n",msk);
 
 for ( i=1 ; i < Sz + 1; i++) {
     msk = msk >> 1;
     if ((msk & 1 ) == 1) {
         ret++;
-        *poss++ = i; 
+        *poss = i;
+        poss++; 
     }   
 } //for
 return ret;
@@ -466,7 +467,7 @@ for (i = 0; i < SqSz; i++) {
 void solve() {
 unsigned char row,col,kvd,c,ca,n,lcnt=0,ret=0; 
 unsigned char *p=possi; 
-int ERROR=0,gSt=0,s,st=2,flt,x,y,i,ii,ci,bi,r;
+int ERROR=0,gSt=0,s,st=2,flt,x,y,i,ii,pp,ci,bi,r;
 status();      // reset 
 
 for (i=0; ((i<10) && (todo !=0)) ; i++ ) { // i<10 now
@@ -481,29 +482,42 @@ for (i=0; ((i<10) && (todo !=0)) ; i++ ) { // i<10 now
     s=status();
     if  (s == 2) break; //todo = 0 break on for i
     if  (s == 0 && gSt>=0) { // no progress
+////    if  (s == 0) { // no progress
         if (gSt>1)  {
 
              restore();                 // must turn on soon !!!!!!!!! is on now !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //             ERROR = writeMat(bi, *p, 3);
-             ERROR = writeMat(bi, 8, 3);    // FUSK FUSK FUSK FUSK FUSK FUSK FUSK FUSK FUSK  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+////             ERROR = writeMat(bi, 8, 3);    // FUSK FUSK FUSK FUSK FUSK FUSK FUSK FUSK FUSK  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
              if (ERROR) printf("After Guess 3 ERRROR= %d ************************ ",ERROR);
-//             gSt--;    // HER HER HER HER HER HER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
              gSt=0;    // HER HER HER HER HER HER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
              st=2; 
-//             break; // break on for i
+
+             for (pp=0;pp<SqSz;pp++)solveOnePoss();   // NEW ******************************************************** 
              continue; // break on for i
           }
         else backup();
         for (ii=0; ii< SqSz; ii++) {
-            p=possi;
-            c=fltGetPz(possi, ii);
-            if (c == 2) break;
+        	p=possi;
+        	c=fltGetPz(possi, ii);
+        	if (c == 2) {
+			printf("C==2 *p++=%d",*p);
+			p++;
+			printf("ii=%d  *p--=%d __________________",ii,*p);
+//			p--; 
+			break;
+		}
         
         }
-//        printf("Guess ii=%d -> %d \r\n",ii,*p);
-        ERROR = writeMat(ii, *p, 3);
-        if (ERROR) printf("After Guess ERRROR= %d ************************ ",ERROR);
-//	outMat();
+        printf("Guess ii=%d -> %d \r\n",ii,1);
+        ERROR = writeMat(ii, 1, 3);
+//        ERROR = writeMat(ii, 7, 3);
+        if (ERROR) {
+		printf("After Guess ERRROR= %d ************************ ",ERROR);
+		p++;
+////		restore();
+////	        ERROR = writeMat(ii, *p, 3);
+		
+	}
         p++; bi=ii;r=*p;
         gSt++;
     }//if
@@ -533,26 +547,14 @@ int main (int argc,int *argv[]) {
 int i,flt,cnt;
 unsigned char *p=possi;
 struct timespec start, end;
-for (cnt=0; cnt<100000;cnt++) {
-i=1;   // 5 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-do {
-//for (i=0; i<6 ;i++) {
-init();
-readPre(i); // kun den nemme 6000 gange
+for (cnt=0; cnt<1;cnt++) {
+	for (i=0; i<6 ;i++) {
+		init();
+		readPre(i);
 
-//outMat();
-
-
-solve();
-// for (i=0 ;((todo != 0 ) &&   (i < 10) ); i++) { printf("solve()loop: %d\r\n",i); solve();  }  
-
-//outMat();
-//printf("Hej fra 64bit cnt:%d\r\n\n",cnt);
-
-
-//} //for i
-} while (0);   //for i
+		solve();
+		outMat();
+	} //for i
 } //for cnt
-outMat();
 return 0;
 }
