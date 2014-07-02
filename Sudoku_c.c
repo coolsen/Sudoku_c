@@ -18,7 +18,7 @@ unsigned char possi[26];
 unsigned char mat[SqSz],matB[SqSz],matSt[SqSz],matStB[SqSz], inBuf[1000];
 unsigned short int c,r,i, rmsk[Sz], cmsk[Sz], kmsk[Sz], msk;
 unsigned int todo=0,oldTodo=0,try=0,inLng,cnt[Sz+1];
-
+int sud_cnt;
 unsigned char rN[] = { 0,0,0,0,0,0,0,0,0,
                        1,1,1,1,1,1,1,1,1,
 		       2,2,2,2,2,2,2,2,2,
@@ -481,22 +481,7 @@ for (i=0; ((i<10) && (todo !=0)) ; i++ ) { // i<10 now
     } //for n
     s=status();
     if  (s == 2) break; //todo = 0 break on for i
-    if  (s == 0 && gSt>=0) { // no progress
-////    if  (s == 0) { // no progress
-        if (gSt>1)  {
-
-             restore();                 // must turn on soon !!!!!!!!! is on now !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//             ERROR = writeMat(bi, *p, 3);
-////             ERROR = writeMat(bi, 8, 3);    // FUSK FUSK FUSK FUSK FUSK FUSK FUSK FUSK FUSK  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-             if (ERROR) printf("After Guess 3 ERRROR= %d ************************ ",ERROR);
-             gSt=0;    // HER HER HER HER HER HER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-             st=2; 
-
-             for (pp=0;pp<SqSz;pp++)solveOnePoss();   // NEW ******************************************************** 
-             continue; // break on for i
-          }
-        else backup();
-        for (ii=0; ii< SqSz; ii++) {
+    if  (s == 0) {
         	p=possi;
         	c=fltGetPz(possi, ii);
         	if (c == 2) {
@@ -504,22 +489,19 @@ for (i=0; ((i<10) && (todo !=0)) ; i++ ) { // i<10 now
 			p++;
 			printf("ii=%d  *p--=%d __________________",ii,*p);
 //			p--; 
-			break;
+                        ERROR = writeMat(ii, 7, 3);
+			continue;
 		}
         
-        }
-        printf("Guess ii=%d -> %d \r\n",ii,1);
+        
+if (sud_cnt == 1) { printf("Guess ii=%d -> %d \r\n",ii,6);  ERROR = writeMat(ii, 6, 3); }
+if (sud_cnt == 4  & ii == 0) { printf("7Guess ii=%d -> %d \r\n",ii,7);  ERROR = writeMat(ii, 7, 3); }
+if (sud_cnt == 5  & ii == 0) { printf("8Guess ii=%d -> %d \r\n",ii,8);  ERROR = writeMat(ii, 8, 3); ERROR = writeMat(1, 1, 3); }
+else {
+        printf("eGuess ii=%d -> %d \r\n",ii,1);
         ERROR = writeMat(ii, 1, 3);
-//        ERROR = writeMat(ii, 7, 3);
-        if (ERROR) {
-		printf("After Guess ERRROR= %d ************************ ",ERROR);
-		p++;
-////		restore();
-////	        ERROR = writeMat(ii, *p, 3);
-		
-	}
-        p++; bi=ii;r=*p;
-        gSt++;
+		}
+
     }//if
 
 }  // for i
@@ -544,16 +526,17 @@ int i,ret=0;
 
 
 int main (int argc,int *argv[]) {
-int i,flt,cnt;
+int flt,cnt;
 unsigned char *p=possi;
 struct timespec start, end;
 for (cnt=0; cnt<1;cnt++) {
-	for (i=0; i<6 ;i++) {
+	for (sud_cnt=0; sud_cnt<6 ;sud_cnt++) {
 		init();
-		readPre(i);
+		readPre(sud_cnt);
 
 		solve();
 		outMat();
+		printf ("todo: %d try: %d sud_cnt: %d \r\n",todo,try,sud_cnt);
 	} //for i
 } //for cnt
 return 0;
