@@ -1,9 +1,9 @@
 /*
  *************************************************** File for windows on windows branch ***************************************************************
- *				Windows does not support color on terminal so it's off 
+ *				Windows does not support color on terminal so it's off
  *
- *				Windows does not support timers with any precition so it's off 
- *				
+ *				Windows does not support timers with any precition so it's off
+ *
  *				Windows version with CR-LF line-ending
  */
 
