@@ -544,7 +544,7 @@ int i,ret=0;
 int main (int argc,int *argv[]) {
 int flt,cnt;
 unsigned char *p=possi;
-for (cnt=0; cnt<100000/6;cnt++) {
+for (cnt=0; cnt<1000/6;cnt++) {
 	for (sud_cnt=0; sud_cnt<6 ;sud_cnt++) {
 		init();
 		readPre(sud_cnt);
