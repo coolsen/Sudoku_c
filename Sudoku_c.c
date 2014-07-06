@@ -17,7 +17,7 @@ unsigned char TTyWhiteBuf[] = "\x1b[39m";
 unsigned char possi[26];
 unsigned char mat[SqSz],matB[SqSz],matSt[SqSz],matStB[SqSz], inBuf[1000];
 unsigned short int c,r,i, rmsk[Sz], cmsk[Sz], kmsk[Sz], msk;
-unsigned int todo=0,oldTodo=0,try=0,inLng,cnt[Sz+1];
+unsigned int todo=0,oldTodo=0,try=0,tryall=0,inLng,cnt[Sz+1];
 int sud_cnt;
 unsigned char rN[] = { 0,0,0,0,0,0,0,0,0,
                        1,1,1,1,1,1,1,1,1,
@@ -289,7 +289,7 @@ return ret;
 
 
 void init() {
-	todo=0; //try = 0;
+	todo=0; try = 0;
         msk = mskAll; 
 	for (i=0; i < SqSz; i++) {
 	  mat[i] = 0;
@@ -473,6 +473,13 @@ status();      // reset
 for (i=0; ((i<10) && (todo !=0)) ; i++ ) { // i<10 now
     solveOnePoss(); 
     findNsolveDom();
+    solveOnePoss(); 
+
+    s=status();
+    if  (s == 2) break; //todo = 0 break on for i
+
+//    findNsolveDom();
+//    solveOnePoss(); 
     for (n=0 ; n < Sz+1; n++) { // next digit
     
         if (cnt[n] == Sz) continue;
@@ -485,20 +492,19 @@ for (i=0; ((i<10) && (todo !=0)) ; i++ ) { // i<10 now
         	p=possi;
         	c=fltGetPz(possi, ii);
         	if (c == 2) {
-			printf("C==2 *p++=%d",*p);
+//			printf("C==2 *p++=%d",*p);
 			p++;
-			printf("ii=%d  *p--=%d __________________",ii,*p);
-//			p--; 
+//			printf("ii=%d  *p--=%d __________________",ii,*p);
                         ERROR = writeMat(ii, 7, 3);
 			continue;
 		}
         
         
-if (sud_cnt == 1) { printf("Guess ii=%d -> %d \r\n",ii,6);  ERROR = writeMat(ii, 6, 3); }
-if (sud_cnt == 4  & ii == 0) { printf("7Guess ii=%d -> %d \r\n",ii,7);  ERROR = writeMat(ii, 7, 3); }
-if (sud_cnt == 5  & ii == 0) { printf("8Guess ii=%d -> %d \r\n",ii,8);  ERROR = writeMat(ii, 8, 3); ERROR = writeMat(1, 1, 3); }
+if (sud_cnt == 1) { ERROR = writeMat(ii, 6, 3); }
+if (sud_cnt == 4  & ii == 0) {  ERROR = writeMat(ii, 7, 3); }
+if (sud_cnt == 5  & ii == 0) { ERROR = writeMat(ii, 8, 3); ERROR = writeMat(1, 1, 3); }
 else {
-        printf("eGuess ii=%d -> %d \r\n",ii,1);
+//        printf("eGuess ii=%d -> %d \r\n",ii,1);
         ERROR = writeMat(ii, 1, 3);
 		}
 
@@ -529,14 +535,17 @@ int main (int argc,int *argv[]) {
 int flt,cnt;
 unsigned char *p=possi;
 struct timespec start, end;
-for (cnt=0; cnt<1;cnt++) {
+for (cnt=0; cnt<100000/6;cnt++) {
 	for (sud_cnt=0; sud_cnt<6 ;sud_cnt++) {
 		init();
 		readPre(sud_cnt);
 
 		solve();
-		outMat();
-		printf ("todo: %d try: %d sud_cnt: %d \r\n",todo,try,sud_cnt);
+		tryall += try;
+                if (cnt == 100) {
+				outMat();
+				printf ("todo: %d try: %d tryall: %d sud_cnt: %d \r\n",todo,try,tryall,sud_cnt);
+				}
 	} //for i
 } //for cnt
 return 0;
