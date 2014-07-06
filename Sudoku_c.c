@@ -16,9 +16,9 @@
 
 #define TTYColor 0	//if your TTY does not support colors turn it of
 
-unsigned char TTyBlueBuf[] = "\x1b[34m"; 
-unsigned char TTyYellBuf[] = "\x1b[33m"; 
-unsigned char TTyWhiteBuf[] = "\x1b[39m"; 
+unsigned char TTyBlueBuf[] = "\x1b[34m";
+unsigned char TTyYellBuf[] = "\x1b[33m";
+unsigned char TTyWhiteBuf[] = "\x1b[39m";
 
 
 
@@ -38,7 +38,7 @@ unsigned char rN[] = { 0,0,0,0,0,0,0,0,0,
                        5,5,5,5,5,5,5,5,5,
                        6,6,6,6,6,6,6,6,6,
                        7,7,7,7,7,7,7,7,7,
-                       8,8,8,8,8,8,8,8,8}; 
+                       8,8,8,8,8,8,8,8,8};
 unsigned char cN[] = { 0,1,2,3,4,5,6,7,8,
                        0,1,2,3,4,5,6,7,8,
                        0,1,2,3,4,5,6,7,8,
@@ -61,7 +61,7 @@ unsigned char kN[] = { 0,0,0,1,1,1,2,2,2,
 
 
 unsigned char fltR[9][9] = {{ 0, 1, 2, 3, 4, 5, 6, 7, 8},
-                            { 9,10,11,12,13,14,15,16,17},   
+                            { 9,10,11,12,13,14,15,16,17},
                             {18,19,20,21,22,23,24,25,26},
                             {27,28,29,30,31,32,33,34,35},
                             {36,37,38,39,40,41,42,43,44},
@@ -72,7 +72,7 @@ unsigned char fltR[9][9] = {{ 0, 1, 2, 3, 4, 5, 6, 7, 8},
 
 
 unsigned char fltC[9][9] = {{ 0, 9,18,27,36,45,54,63,72},
-                            { 1,10,19,28,37,46,55,64,73},   
+                            { 1,10,19,28,37,46,55,64,73},
                             { 2,11,20,29,38,47,56,65,74},
                             { 3,12,21,30,39,48,57,66,75},
                             { 4,13,22,31,40,49,58,67,76},
@@ -82,7 +82,7 @@ unsigned char fltC[9][9] = {{ 0, 9,18,27,36,45,54,63,72},
                             { 8,17,26,35,44,53,62,71,80}};
 
 unsigned char fltK[9][9] = {{ 0, 1, 2, 9,10,11,18,19,20},
-                            { 3, 4, 5,12,13,14,21,22,23},   
+                            { 3, 4, 5,12,13,14,21,22,23},
                             { 6, 7, 8,15,16,17,24,25,26},
                             {27,28,29,36,37,38,45,46,47},
                             {30,31,32,39,40,41,48,49,50},
@@ -99,26 +99,26 @@ case 0:
 "[7,0,0,0,9,0,0,0,0,0,0,4,6,0,2,0,0,0,2,0,0,0,0,7,0,6,5,0,7,9,0,0,0,5,0,3,0,0,2,0,0,0,9,0,0,3,0,6,0,0,0,8,1,0,6,4,0,5,0,0,0,0,7,0,0,0,7,0,3,4,0,0,0,0,0,0,4,0,0,0,2]");
   break;
 case 1:
-  inLng = sprintf(inBuf,  
-"[0,3,0,7,0,0,2,9,0,2,5,8,0,0,1,7,0,0,0,0,0,0,0,5,0,0,0,0,0,9,0,0,0,8,0,0,0,0,0,4,2,3,0,0,0,0,0,2,0,0,0,3,0,0,0,0,0,8,0,0,0,0,0,0,0,5,6,0,0,9,3,7,0,9,6,0,0,4,0,8,0]"); 
+  inLng = sprintf(inBuf,
+"[0,3,0,7,0,0,2,9,0,2,5,8,0,0,1,7,0,0,0,0,0,0,0,5,0,0,0,0,0,9,0,0,0,8,0,0,0,0,0,4,2,3,0,0,0,0,0,2,0,0,0,3,0,0,0,0,0,8,0,0,0,0,0,0,0,5,6,0,0,9,3,7,0,9,6,0,0,4,0,8,0]");
   break;
 case 2:
-  inLng = sprintf(inBuf,  
-"[0,0,0,0,1,2,0,0,8,0,0,7,6,0,0,2,0,3,0,5,8,0,0,9,7,1,0,5,7,0,2,0,0,0,0,0,0,9,1,3,0,7,4,2,0,0,0,0,0,0,6,0,3,7,0,1,2,8,0,0,9,5,0,3,0,5,0,0,4,6,0,0,4,0,0,1,7,0,0,0,0]"); 
+  inLng = sprintf(inBuf,
+"[0,0,0,0,1,2,0,0,8,0,0,7,6,0,0,2,0,3,0,5,8,0,0,9,7,1,0,5,7,0,2,0,0,0,0,0,0,9,1,3,0,7,4,2,0,0,0,0,0,0,6,0,3,7,0,1,2,8,0,0,9,5,0,3,0,5,0,0,4,6,0,0,4,0,0,1,7,0,0,0,0]");
   break;
 case 3:
-  inLng = sprintf(inBuf,  
+  inLng = sprintf(inBuf,
 "[0,2,0,0,8,0,9,4,0,0,0,0,0,0,2,3,0,0,5,0,4,0,0,0,0,0,1,4,0,0,0,0,8,0,0,3,0,0,0,0,9,0,0,0,0,6,0,0,1,0,0,0,0,7,8,0,0,0,0,0,2,0,9,0,0,1,6,0,0,0,0,0,0,4,3,0,5,0,0,7,0]");
   break;
 case 4:
-  inLng = sprintf(inBuf,  
+  inLng = sprintf(inBuf,
 "[0,0,0,0,0,0,1,0,4,0,6,0,3,0,0,0,2,0,2,0,0,0,0,7,0,0,9,8,0,0,5,0,0,0,4,0,0,5,6,4,0,9,3,8,0,0,3,0,0,0,2,0,0,7,6,0,0,7,0,0,0,0,1,0,7,0,0,0,4,0,9,0,5,0,4,0,0,0,0,0,0]");
   break;
 case 5:
-  inLng = sprintf(inBuf,  
+  inLng = sprintf(inBuf,
 "[0,0,3,0,4,0,0,9,0,0,5,4,0,0,0,3,0,0,7,6,0,0,0,0,1,0,0,0,0,0,0,0,9,0,3,8,0,0,0,0,2,0,0,0,0,6,3,0,7,0,0,0,0,0,0,0,6,0,0,0,0,5,3,0,0,2,0,0,0,7,1,0,0,8,0,0,1,0,9,0,0]");
   break;
- 
+
 
 } // switch
 return;
@@ -139,37 +139,37 @@ void outMat() {
 			PSz=0;
                         if (c!= 0 && (c % KSz) == 0 ) {
 	                	PSz = sprintf (ptr, "|");
-	                	ptr += PSz; 
+	                	ptr += PSz;
                         }
                         if (mat[i] == 0) {
 				PSz = sprintf (ptr, "   ");
 				i++;
 			}
-                	else {  
+                	else {
 				if (PrColor) {
-					if (matSt[i] == 1) StTTYCol = TTyWhiteBuf;					
-					if (matSt[i] == 2) StTTYCol = TTyBlueBuf;					
-					if (matSt[i] == 3) StTTYCol = TTyYellBuf;					
+					if (matSt[i] == 1) StTTYCol = TTyWhiteBuf;
+					if (matSt[i] == 2) StTTYCol = TTyBlueBuf;
+					if (matSt[i] == 3) StTTYCol = TTyYellBuf;
 					PSz = sprintf (ptr, "%s %d %s",StTTYCol,mat[i++],TTyWhiteBuf);
 				}
-				else { 
+				else {
 					PSz = sprintf (ptr, " %d ",mat[i++]);
 				}
 			}
-                	ptr += PSz; 
+                	ptr += PSz;
                 } //for c
                 printf ("%s\r\n",lineBuf);
         }  // for r-i
 
         todo=0;
-         
+
         for (i = 1; i < Sz+1; i++) {
             todo+= Sz - cnt[i];
-            if (Sz != cnt[i]) printf("%d:%d ",i,cnt[i]);     
+            if (Sz != cnt[i]) printf("%d:%d ",i,cnt[i]);
 
         }
         if (todo != 0)  printf ("todo: %d try: %d\r\n",todo,try);
-        
+
 }
 
 int writeMat(int flt,int n, int st) {
@@ -183,7 +183,7 @@ ridx = rN[flt]; // get index of row mask
 cidx = cN[flt]; // get index of col mask
 kidx = kN[flt]; // get index of kvad mask//printf("I writeMat() i=%d n=%d \r\n",i,n);
 //if (st != 1) printf("writeMat(): ridx=%d cidx=%d kidx=%d  ",ridx,cidx,kidx);
-msk = rmsk[ridx]; 
+msk = rmsk[ridx];
 msk = msk & cmsk[cidx];
 msk = msk & kmsk[kidx];
 //if (st != 1) printf ("writeMat(flt=%d,n=%d,,,): msk= %d ",flt,n,msk);
@@ -211,7 +211,7 @@ return 0;
 
 int readJSON(unsigned char *buf) {
 unsigned char *t;
-int i=0,n,ch,st=1,Jst=0,ERROR=0; // n scannet number,C count 
+int i=0,n,ch,st=1,Jst=0,ERROR=0; // n scannet number,C count
 ch= *buf;
 if (ch == 0)return 1;
 for ( ;ch !=0;buf++, ch= *buf) {
@@ -219,14 +219,14 @@ for ( ;ch !=0;buf++, ch= *buf) {
     if (ch == '\t') continue;   //whitespace
     if (ch == '\r') continue;   //whitespace
     if (ch == '\n') continue;   //whitespace
- 
+
 
     if ((ch == '[')  && Jst==0) {Jst=1;continue;}
     if ((ch == ']')  && Jst==1) {Jst=0;continue;}
     if (ch == ',' && Jst==1)    {i++; continue;}
-     
+
     if ((ch >= '0' && (ch < ('9' +1))) && Jst==1) {
-//        printf("før sscanf() ch=%c i=%d ERROR=%d\r\n",ch,i,ERROR);   
+//        printf("før sscanf() ch=%c i=%d ERROR=%d\r\n",ch,i,ERROR);
 	c = sscanf(buf,"%d",&n);
 //        printf("før sscanf() n=%d i=%d ERROR=%d\r\n",n,i,ERROR);
         if (n > 0 && (n < (9 +1))) { ERROR = writeMat(i, n, st);if (ERROR != 0){printf("After writeMat ERROR=%d",ERROR);return ERROR;}}
@@ -234,7 +234,7 @@ for ( ;ch !=0;buf++, ch= *buf) {
     else {ERROR = 2;printf("i else ch=%c i=%d ERROR=%d\r\n",ch,i,ERROR);break; }
 } //for
 //printf("Slut på readJSON() i=%d Jst=%d ERROR=%d\r\n",i,Jst,ERROR);
-    
+
 
 return ERROR;
 } // readJSON()
@@ -259,7 +259,7 @@ ridx = rN[flt]; // get index of row mask
 cidx = cN[flt]; // get index of col mask
 kidx = kN[flt]; // get index of col mask
 //printf("ridx=%d cidx=%d kidx=%d  ",ridx,cidx,kidx);
-msk = rmsk[ridx]; 
+msk = rmsk[ridx];
 msk = msk & cmsk[cidx];
 msk = msk & kmsk[kidx];
 //if (flt == 0) printf ("++hej msk= %03X \r\n",msk);
@@ -269,8 +269,8 @@ for ( i=1 ; i < Sz + 1; i++) {
     if ((msk & 1 ) == 1) {
         ret++;
         *poss = i;
-        poss++; 
-    }   
+        poss++;
+    }
 } //for
 return ret;
 } //func
@@ -287,21 +287,21 @@ ridx = rN[flt]; // get index of row mask
 cidx = cN[flt]; // get index of col mask
 kidx = kN[flt]; // get index of col mask
 //printf("ridx=%d cidx=%d kidx=%d  ",ridx,cidx,kidx);
-msk = rmsk[ridx]; 
+msk = rmsk[ridx];
 msk = msk & cmsk[cidx];
 msk = msk & kmsk[kidx];
 //printf ("msk= %d \r\n",msk);
 
 msk = msk >> n;
-if ((msk & 1 ) == 1) ret++; 
-     
+if ((msk & 1 ) == 1) ret++;
+
 return ret;
 } //func
 
 
 void init() {
 	todo=0; try = 0;
-        msk = mskAll; 
+        msk = mskAll;
 	for (i=0; i < SqSz; i++) {
 	  mat[i] = 0;
 	  matSt[i] = 0;
@@ -330,7 +330,7 @@ restore() {
 int i,ERROR;
 init();
 for (i=0; i < SqSz; i++) {
-    
+
     if (matB[i] != 0) { ERROR = writeMat(i, matB[i],matStB[i]);  }
     if (ERROR != 0) printf("ERROR  %d",ERROR);
 //    mat[i] = matB[i];
@@ -351,14 +351,14 @@ int i,c,ca,ci,x,y,ERROR;
         for (y=0 ; y < Sz; y++) { // next field in row
             i=fltR[x][y];
             if (mat[i] == 0 ) {
-                 
+
                 c = fltTryN(n, i); // if n can go in mat[i] c will be add with 1
                 if (c == 1) ci=i;
                 ca += c;
 //           printf(",i%d:c%d ",i,ca);
             } // if
         } // for y
-//    printf("\r\n"); 
+//    printf("\r\n");
         if (ca ==  1)  {
 //            printf("ROD-");
             ERROR = writeMat(ci, n, 2);
@@ -376,14 +376,14 @@ int i,c,ca,ci,x,y,ERROR;
         for (y=0 ; y < Sz; y++) { // next field in col
             i=fltC[x][y];
             if (mat[i] == 0 ) {
-                 
+
                 c = fltTryN(n, i); // if n can go in mat[i] c will be add with 1
                 if (c == 1) ci=i;
                 ca += c;
 //           printf(",i%d:c%d ",i,ca);
             } // if
         } // for y
-//    printf("\r\n"); 
+//    printf("\r\n");
       if (ca ==  1)  {
 //          printf("COD-");
           ERROR = writeMat(ci, n, 2);
@@ -401,7 +401,7 @@ int i,c,ca,ci,x,y,ERROR;
         for (y=0 ; y < Sz; y++) { // next field in kvadrat
             i=fltK[x][y];
             if (mat[i] == 0 ) {
-                 
+
                 c = fltTryN(n, i); // if n can go in mat[i] c will be add with 1
                 if (c == 1) ci=i;
                 ca += c;
@@ -422,7 +422,7 @@ findNsolveDom() {
 int c,ci,ca,lcnt,x,y,n,i,ERROR;
 
 for (i = 1; i < Sz; i++) {
-    todo=0; 
+    todo=0;
     if (cnt[i]==Sz) continue;
     todo+= Sz - cnt[i];
     if (cnt[i] > lcnt) {
@@ -430,7 +430,7 @@ for (i = 1; i < Sz; i++) {
       n=i;
 
     } //if
-} //for 
+} //for
 
     for (x=0 ; x < Sz; x++) { // next row
         c=0;
@@ -439,14 +439,14 @@ for (i = 1; i < Sz; i++) {
         for (y=0 ; y < Sz; y++) { // next field in row
             i=fltR[x][y];
             if (mat[i] == 0 ) {
-                 
+
                 c = fltTryN(n, i); // if n can go in mat[i] c will be add with 1
                 if (c == 1) ci=i;
                 ca += c;
 //           printf(",i%d:c%d ",i,ca);
             } // if
         } // for y
-//    printf("\r\n"); 
+//    printf("\r\n");
         if (ca ==  1)  {
 //            printf("NOD-");
             ERROR = writeMat(ci, n, 2);
@@ -467,31 +467,31 @@ for (i = 0; i < SqSz; i++) {
       p=possi;
       c=fltGetPz(possi, i);
       if (c == 1) {
-//        printf("Ons-",i,*p); 
-        ERROR = writeMat(i, *p, 2);  
+//        printf("Ons-",i,*p);
+        ERROR = writeMat(i, *p, 2);
         if (ERROR != 0) printf("Solve(): O-s ERROR =%d\r\n",ERROR);
       }
     }
 }
 }
 void solve() {
-unsigned char row,col,kvd,c,ca,n,lcnt=0,ret=0; 
-unsigned char *p=possi; 
+unsigned char row,col,kvd,c,ca,n,lcnt=0,ret=0;
+unsigned char *p=possi;
 int ERROR=0,gSt=0,s,st=2,flt,x,y,i,ii,pp,ci,bi,r;
-status();      // reset 
+status();      // reset
 
 for (i=0; ((i<10) && (todo !=0)) ; i++ ) { // i<10 now
-    solveOnePoss(); 
+    solveOnePoss();
     findNsolveDom();
-    solveOnePoss(); 
+    solveOnePoss();
 
     s=status();
     if  (s == 2) break; //todo = 0 break on for i
 
 //    findNsolveDom();
-//    solveOnePoss(); 
+//    solveOnePoss();
     for (n=0 ; n < Sz+1; n++) { // next digit
-    
+
         if (cnt[n] == Sz) continue;
 
         SolveAllDom(n);
@@ -508,8 +508,8 @@ for (i=0; ((i<10) && (todo !=0)) ; i++ ) { // i<10 now
                         ERROR = writeMat(ii, 7, 3);
 			continue;
 		}
-        
-        
+
+
 if (sud_cnt == 1) { ERROR = writeMat(ii, 6, 3); }
 if (sud_cnt == 4  & ii == 0) {  ERROR = writeMat(ii, 7, 3); }
 if (sud_cnt == 5  & ii == 0) { ERROR = writeMat(ii, 8, 3); ERROR = writeMat(1, 1, 3); }
@@ -544,7 +544,8 @@ int i,ret=0;
 int main (int argc,int *argv[]) {
 int flt,cnt;
 unsigned char *p=possi;
-for (cnt=0; cnt<1000/6;cnt++) {
+//struct timespec start, end;
+for (cnt=0; cnt<100000/6;cnt++) {
 	for (sud_cnt=0; sud_cnt<6 ;sud_cnt++) {
 		init();
 		readPre(sud_cnt);
