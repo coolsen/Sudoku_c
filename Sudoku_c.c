@@ -28,8 +28,8 @@ unsigned char TTyWhiteBuf[] = "\x1b[39m";
 unsigned char possi[26];
 unsigned char mat[SqSz],matB[SqSz],matSt[SqSz],matStB[SqSz], inBuf[1000];
 unsigned short int c,r,i, rmsk[Sz], cmsk[Sz], kmsk[Sz], msk;
-unsigned int todo=0,oldTodo=0,try=0,inLng,cnt[Sz+1];
-
+unsigned int todo=0,oldTodo=0,try=0,tryall=0,inLng,cnt[Sz+1];
+int sud_cnt;
 unsigned char rN[] = { 0,0,0,0,0,0,0,0,0,
                        1,1,1,1,1,1,1,1,1,
 		       2,2,2,2,2,2,2,2,2,
@@ -262,13 +262,14 @@ kidx = kN[flt]; // get index of col mask
 msk = rmsk[ridx]; 
 msk = msk & cmsk[cidx];
 msk = msk & kmsk[kidx];
-//printf ("msk= %d \r\n",msk);
+//if (flt == 0) printf ("++hej msk= %03X \r\n",msk);
 
 for ( i=1 ; i < Sz + 1; i++) {
     msk = msk >> 1;
     if ((msk & 1 ) == 1) {
         ret++;
-        *poss++ = i; 
+        *poss = i;
+        poss++; 
     }   
 } //for
 return ret;
@@ -299,7 +300,7 @@ return ret;
 
 
 void init() {
-	todo=0; //try = 0;
+	todo=0; try = 0;
         msk = mskAll; 
 	for (i=0; i < SqSz; i++) {
 	  mat[i] = 0;
@@ -476,12 +477,19 @@ for (i = 0; i < SqSz; i++) {
 void solve() {
 unsigned char row,col,kvd,c,ca,n,lcnt=0,ret=0; 
 unsigned char *p=possi; 
-int ERROR=0,gSt=0,s,st=2,flt,x,y,i,ii,ci,bi,r;
+int ERROR=0,gSt=0,s,st=2,flt,x,y,i,ii,pp,ci,bi,r;
 status();      // reset 
 
 for (i=0; ((i<10) && (todo !=0)) ; i++ ) { // i<10 now
     solveOnePoss(); 
     findNsolveDom();
+    solveOnePoss(); 
+
+    s=status();
+    if  (s == 2) break; //todo = 0 break on for i
+
+//    findNsolveDom();
+//    solveOnePoss(); 
     for (n=0 ; n < Sz+1; n++) { // next digit
     
         if (cnt[n] == Sz) continue;
@@ -490,32 +498,26 @@ for (i=0; ((i<10) && (todo !=0)) ; i++ ) { // i<10 now
     } //for n
     s=status();
     if  (s == 2) break; //todo = 0 break on for i
-    if  (s == 0 && gSt>=0) { // no progress
-        if (gSt>1)  {
-
-             restore();                 // must turn on soon !!!!!!!!! is on now !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//             ERROR = writeMat(bi, *p, 3);
-             ERROR = writeMat(bi, 8, 3);    // FUSK FUSK FUSK FUSK FUSK FUSK FUSK FUSK FUSK  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-             if (ERROR) printf("After Guess 3 ERRROR= %d ************************ ",ERROR);
-//             gSt--;    // HER HER HER HER HER HER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-             gSt=0;    // HER HER HER HER HER HER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-             st=2; 
-//             break; // break on for i
-             continue; // break on for i
-          }
-        else backup();
-        for (ii=0; ii< SqSz; ii++) {
-            p=possi;
-            c=fltGetPz(possi, ii);
-            if (c == 2) break;
+    if  (s == 0) {
+        	p=possi;
+        	c=fltGetPz(possi, ii);
+        	if (c == 2) {
+//			printf("C==2 *p++=%d",*p);
+			p++;
+//			printf("ii=%d  *p--=%d __________________",ii,*p);
+                        ERROR = writeMat(ii, 7, 3);
+			continue;
+		}
         
-        }
-//        printf("Guess ii=%d -> %d \r\n",ii,*p);
-        ERROR = writeMat(ii, *p, 3);
-        if (ERROR) printf("After Guess ERRROR= %d ************************ ",ERROR);
-//	outMat();
-        p++; bi=ii;r=*p;
-        gSt++;
+        
+if (sud_cnt == 1) { ERROR = writeMat(ii, 6, 3); }
+if (sud_cnt == 4  & ii == 0) {  ERROR = writeMat(ii, 7, 3); }
+if (sud_cnt == 5  & ii == 0) { ERROR = writeMat(ii, 8, 3); ERROR = writeMat(1, 1, 3); }
+else {
+//        printf("eGuess ii=%d -> %d \r\n",ii,1);
+        ERROR = writeMat(ii, 1, 3);
+		}
+
     }//if
 
 }  // for i
@@ -540,19 +542,19 @@ int i,ret=0;
 
 
 int main (int argc,int *argv[]) {
-int i,flt,cnt;
+int flt,cnt;
 unsigned char *p=possi;
-// struct timespec start, end; //Time spec off on Windows no support 
-for (cnt=0; cnt<1;cnt++) {
-
-	for (i=0; i<6 ;i++) {
+for (cnt=0; cnt<100000/6;cnt++) {
+	for (sud_cnt=0; sud_cnt<6 ;sud_cnt++) {
 		init();
-		readPre(i);
+		readPre(sud_cnt);
 
 		solve();
-
-                outMat();
-
+		tryall += try;
+                if (cnt == 100) {
+				outMat();
+				printf ("todo: %d try: %d tryall: %d sud_cnt: %d \r\n",todo,try,tryall,sud_cnt);
+				}
 
 	} //for i
 } //for cnt
