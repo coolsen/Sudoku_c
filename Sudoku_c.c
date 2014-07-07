@@ -5,6 +5,9 @@
 
 #define TTYColor -1		//if your TTY does not support colors turn it of
 
+#define CLOCK_MONOTONIC                 1
+
+
 unsigned char TTyBlueBuf[] = "\x1b[34m"; 
 unsigned char TTyYellBuf[] = "\x1b[33m"; 
 unsigned char TTyWhiteBuf[] = "\x1b[39m"; 
@@ -14,6 +17,35 @@ unsigned char TTyWhiteBuf[] = "\x1b[39m";
 #include <stdio.h>
 #include <stdint.h>
 #include <time.h>
+#include <string.h>
+#include <signal.h>
+#include <errno.h>
+#include <unistd.h>
+#include <pthread.h>
+#include <sys/types.h>
+
+
+
+
+#include <stdlib.h>
+
+
+
+#include <poll.h>
+#include <sys/param.h>
+#include <sys/socket.h>
+#include <linux/sockios.h>
+#include <sys/file.h>
+
+
+#include <ctype.h>
+#include <errno.h>
+
+
+
+
+
+struct timespec first, last;
 unsigned char possi[26];
 unsigned char mat[SqSz],matB[SqSz],matSt[SqSz],matStB[SqSz], inBuf[1000];
 unsigned short int c,r,i, rmsk[Sz], cmsk[Sz], kmsk[Sz], msk;
@@ -528,19 +560,50 @@ int i,ret=0;
         return ret;
 }
 
+void deltatime() {
+	if (last.tv_sec) {
+		long usecs = (last.tv_sec-first.tv_sec) * 1000000 +
+			(last.tv_nsec-first.tv_nsec+500) / 1000;
+		long msecs = (usecs+500)/1000;
+		usecs -= msecs*1000 - 500;
+		printf(" %ld.%03ldms\n", msecs, usecs);
+	} else {
+		printf(" UNSOLICITED?\n");
+	}
 
+}
+static struct timeval tm1;
 
+static inline void start()
+{
+    gettimeofday(&tm1, NULL);
+}
 
+static inline void stop()
+{
+    struct timeval tm2;
+    gettimeofday(&tm2, NULL);
+
+//    unsigned long long t = 1000 * (tm2.tv_sec - tm1.tv_sec) + (tm2.tv_usec - tm1.tv_usec) / 1000;
+    unsigned long long t = 1000 * (tm2.tv_sec - tm1.tv_sec) + (tm2.tv_usec - tm1.tv_usec);
+    printf("%llu microseconds\n", t);
+}
 int main (int argc,int *argv[]) {
 int flt,cnt;
 unsigned char *p=possi;
-struct timespec start, end;
+//struct timespec first, last;
 for (cnt=0; cnt<100000/6;cnt++) {
 	for (sud_cnt=0; sud_cnt<6 ;sud_cnt++) {
 		init();
 		readPre(sud_cnt);
-
+//		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &first);
+                start();
 		solve();
+                stop();
+//		clock_gettime(CLOCK_MONOTONIC, &last);
+//		clock_gettime(TIMER_ABSTIME, &last);
+//		deltatime();
+
 		tryall += try;
                 if (cnt == 100) {
 				outMat();
