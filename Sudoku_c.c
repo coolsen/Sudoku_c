@@ -267,7 +267,7 @@ if (readJSON(inBuf) != 0) return 1;
 return 0;
 }
 
-
+static inline
 int fltGetPz(unsigned char *poss, int flt) { // get possibilities for on field flt
 int ret=0, i;
 unsigned short msk;
@@ -296,6 +296,7 @@ for ( i=1 ; i < Sz + 1; i++) {
 return ret;
 } //func
 
+static inline
 int fltTryN(int n, int flt) { // can flt be n ? Answer 0=false 1=true
 int ret=0, i;
 unsigned short msk;
@@ -362,7 +363,7 @@ for (i=0; i < SqSz; i++) {
 }
 
 
-
+static inline
 SolveAllDom(int n) {
 int i,c,ca,ci,x,y,ERROR;
 //   ------------------------------------- row
@@ -439,7 +440,7 @@ int i,c,ca,ci,x,y,ERROR;
 
 
 
-
+static inline
 findNsolveDom() {
 int c,ci,ca,lcnt,x,y,n,i,ERROR;
 
@@ -504,8 +505,9 @@ status();      // reset
 
 for (i=0; ((i<10) && (todo !=0)) ; i++ ) { // i<10 now
     solveOnePoss(); 
-    findNsolveDom();
     solveOnePoss(); 
+//    findNsolveDom();
+//    solveOnePoss(); 
 
     s=status();
     if  (s == 2) break; //todo = 0 break on for i
@@ -572,21 +574,22 @@ void deltatime() {
 	}
 
 }
-static struct timeval tm1;
+static struct timeval tm1,tm2;
+long long t,tacc=0;
 
 static inline void start()
 {
     gettimeofday(&tm1, NULL);
 }
 
-static inline void stop()
+static inline long long stop()
 {
-    struct timeval tm2;
+    long long tret;
     gettimeofday(&tm2, NULL);
 
-//    unsigned long long t = 1000 * (tm2.tv_sec - tm1.tv_sec) + (tm2.tv_usec - tm1.tv_usec) / 1000;
-    unsigned long long t = 1000 * (tm2.tv_sec - tm1.tv_sec) + (tm2.tv_usec - tm1.tv_usec);
-    printf("%llu microseconds\n", t);
+    tret = 1000000 * (tm2.tv_sec - tm1.tv_sec) + (tm2.tv_usec - tm1.tv_usec);
+    return tret;
+//    printf("%llu microseconds\n", t);
 }
 int main (int argc,int *argv[]) {
 int flt,cnt;
@@ -594,20 +597,21 @@ unsigned char *p=possi;
 //struct timespec first, last;
 for (cnt=0; cnt<100000/6;cnt++) {
 	for (sud_cnt=0; sud_cnt<6 ;sud_cnt++) {
+		start();	
 		init();
 		readPre(sud_cnt);
-//		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &first);
-                start();
+
+//		start();
 		solve();
-                stop();
-//		clock_gettime(CLOCK_MONOTONIC, &last);
-//		clock_gettime(TIMER_ABSTIME, &last);
-//		deltatime();
+                t=stop();
+                tacc += t;
+//		printf("%llu microseconds\n", t);
 
 		tryall += try;
                 if (cnt == 100) {
+				if (sud_cnt == 5) tacc = tacc/(6*100); // last will print average
 				outMat();
-				printf ("todo: %d try: %d tryall: %d sud_cnt: %d \r\n",todo,try,tryall,sud_cnt);
+				printf ("todo: %d try: %d tryall: %d sud_cnt: %d solve time: %lluuS\r\n",todo,try,tryall,sud_cnt,tacc);
 				}
 	} //for i
 } //for cnt
