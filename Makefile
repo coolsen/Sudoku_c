@@ -1,11 +1,14 @@
 CC=gcc 
 
-Sudoku_c :	Sudoku_c.o 
+Sudoku_c :	Sudoku_c.o
+
+fork:		fork.o
 
 edit:
-	gedit Sudoku_c.c
+	gedit Sudoku_c.c fork.c sudoku20.sud
+
 run:
-	./Sudoku_c
+	perf stat ./Sudoku_c
 
 clean:
-	rm -f Sudoku_c Sudoku_c.o
+	rm -f Sudoku_c Sudoku_c.o fork fork.o

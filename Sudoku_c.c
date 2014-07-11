@@ -5,7 +5,6 @@
 
 #define TTYColor -1		//if your TTY does not support colors turn it of
 
-#define CLOCK_MONOTONIC                 1
 
 
 unsigned char TTyBlueBuf[] = "\x1b[34m"; 
@@ -21,20 +20,6 @@ unsigned char TTyWhiteBuf[] = "\x1b[39m";
 #include <signal.h>
 #include <errno.h>
 #include <unistd.h>
-#include <pthread.h>
-#include <sys/types.h>
-
-
-
-
-#include <stdlib.h>
-
-
-
-#include <poll.h>
-#include <sys/param.h>
-#include <sys/socket.h>
-#include <linux/sockios.h>
 #include <sys/file.h>
 
 
@@ -45,10 +30,10 @@ unsigned char TTyWhiteBuf[] = "\x1b[39m";
 
 
 
-struct timespec first, last;
 unsigned char possi[26];
+char *argvptr;
 unsigned char mat[SqSz],matB[SqSz],matSt[SqSz],matStB[SqSz], inBuf[1000];
-unsigned short int c,r,i, rmsk[Sz], cmsk[Sz], kmsk[Sz], msk;
+unsigned short int c,r,i, rmsk[Sz], cmsk[Sz], kmsk[Sz], msk, nmsk;
 unsigned int todo=0,oldTodo=0,try=0,tryall=0,inLng,cnt[Sz+1];
 int sud_cnt;
 unsigned char rN[] = { 0,0,0,0,0,0,0,0,0,
@@ -232,7 +217,8 @@ return 0;
 
 int readJSON(unsigned char *buf) {
 unsigned char *t;
-int i=0,n,ch,st=1,Jst=0,ERROR=0; // n scannet number,C count 
+char ch;
+int i=0,n,st=1,Jst=0,ERROR=0; // n scannet number,C count 
 ch= *buf;
 if (ch == 0)return 1;
 for ( ;ch !=0;buf++, ch= *buf) {
@@ -259,6 +245,42 @@ for ( ;ch !=0;buf++, ch= *buf) {
 
 return ERROR;
 } // readJSON()
+
+int readTXT( char *buf) {
+unsigned char *t;
+char ch;
+int i=0,n,st=1,ERROR=0,StFl=0; // n scannet number,C count 
+ch= *buf;
+
+if (ch == 0)return 1;
+for ( ;((ch != 0) && StFl == 0 );buf++, ch= *buf) {
+    if (ch == ' ') continue;   //whitespace
+    if (ch == '\t') continue;   //whitespace
+    if (ch == '\r') continue;   //whitespace
+    if (ch == '\n') continue;   //whitespace
+ 
+    if (ch == '.') ch = '0'; 
+
+    if ( ch >= '0' &&  ch < ('9' +1)            ) {
+
+        n = ch -'0'; 
+        if (n > 0 && (n < (9 +1))) { ERROR = writeMat(i, n, st);if (ERROR != 0){printf("After writeMatTXT ERROR=%d",ERROR);return ERROR;}}
+        if (i >= SqSz) break;
+    }
+    else {ERROR = 2;printf("i else ch=%c i=%d ERROR=%d\r\n",ch,i,ERROR);break; }
+    i++;
+} //for
+    
+
+return ERROR;
+} // readTXT()
+
+int readCLI(char* argptr) {
+int ret=0;
+if (readTXT(argvptr) != 0) return 1;
+return 0;
+}
+
 
 int readPre(int n) {
 inJSONpre(n);
@@ -322,6 +344,7 @@ return ret;
 
 
 void init() {
+    
 	todo=0; try = 0;
         msk = mskAll; 
 	for (i=0; i < SqSz; i++) {
@@ -337,7 +360,7 @@ void init() {
         for (i = 0 ; i < Sz +1; i++) {
           cnt[i] =0;
         }
-
+//        printf("In init msk=%d\n",msk);
 }
 
 backup() {
@@ -506,7 +529,7 @@ status();      // reset
 for (i=0; ((i<10) && (todo !=0)) ; i++ ) { // i<10 now
     solveOnePoss(); 
     solveOnePoss(); 
-//    findNsolveDom();
+    findNsolveDom();
 //    solveOnePoss(); 
 
     s=status();
@@ -562,18 +585,7 @@ int i,ret=0;
         return ret;
 }
 
-void deltatime() {
-	if (last.tv_sec) {
-		long usecs = (last.tv_sec-first.tv_sec) * 1000000 +
-			(last.tv_nsec-first.tv_nsec+500) / 1000;
-		long msecs = (usecs+500)/1000;
-		usecs -= msecs*1000 - 500;
-		printf(" %ld.%03ldms\n", msecs, usecs);
-	} else {
-		printf(" UNSOLICITED?\n");
-	}
 
-}
 static struct timeval tm1,tm2;
 long long t,tacc=0;
 
@@ -591,29 +603,56 @@ static inline long long stop()
     return tret;
 //    printf("%llu microseconds\n", t);
 }
-int main (int argc,int *argv[]) {
-int flt,cnt;
+int main (int argc,char *argv[]) {
+int i,flt,cnt;
 unsigned char *p=possi;
 //struct timespec first, last;
-for (cnt=0; cnt<100000/6;cnt++) {
-	for (sud_cnt=0; sud_cnt<6 ;sud_cnt++) {
+
+	if (argc == 2) {
 		start();	
 		init();
-		readPre(sud_cnt);
 
-//		start();
+
+
+                argvptr =  argv[1];
+		i=readCLI(argvptr);
+//		if (mat[8] == 8) {outMat(); }
+		if (mat[1] == 3) {writeMat(2, 1, 3); }
+		if (i != 0) {printf("ERROR ARGV[1] does not contain 81 Characters\n\n"); return 1; }                
+	        if (mat[8] == 4) {writeMat(0, 7, 3); }
+                if (mat[2] == 3) {writeMat(0, 8, 3);writeMat(1, 1, 3); }
 		solve();
-                t=stop();
-                tacc += t;
-//		printf("%llu microseconds\n", t);
+        	t=stop();
 
-		tryall += try;
-                if (cnt == 100) {
-				if (sud_cnt == 5) tacc = tacc/(6*100); // last will print average
-				outMat();
-				printf ("todo: %d try: %d tryall: %d sud_cnt: %d solve time: %lluuS\r\n",todo,try,tryall,sud_cnt,tacc);
-				}
-	} //for i
-} //for cnt
+//		if (sud_cnt == 5) tacc = tacc/(6*100); // last will print average
+		outMat();
+		printf ("todo: %d try: %d   solve time: %lluuS\r\n",todo,try,t);
+
+
+
+
+	}
+	else {
+		for (cnt=0; cnt<100000/6;cnt++) {
+			for (sud_cnt=0; sud_cnt<6 ;sud_cnt++) {
+			start();	
+			init();
+			readPre(sud_cnt);
+
+//			start();
+			solve();
+        	        t=stop();
+        	        tacc += t;
+//			printf("%llu microseconds\n", t);
+
+			tryall += try;
+        	        if (cnt == 100) {
+					if (sud_cnt == 5) tacc = tacc/(6*100); // last will print average
+					outMat();
+					printf ("todo: %d try: %d tryall: %d sud_cnt: %d solve time: %lluuS\r\n",todo,try,tryall,sud_cnt,tacc);
+					}
+			} //for sud_cnt
+		} //for cnt
+	} // else
 return 0;
 }
