@@ -5,9 +5,9 @@
 
 #define TTYColor -1		//if your TTY does not support colors turn it of
 
-unsigned char TTyBlueBuf[] = "\x1b[34m"; 
-unsigned char TTyYellBuf[] = "\x1b[33m"; 
-unsigned char TTyWhiteBuf[] = "\x1b[39m"; 
+unsigned char TTyBlueBuf[] = "\x1b[34m";
+unsigned char TTyYellBuf[] = "\x1b[33m";
+unsigned char TTyWhiteBuf[] = "\x1b[39m";
 
 
 
@@ -216,8 +216,7 @@ return 0;
 int readJSON(unsigned char *buf) {
 unsigned char *t;
 
-char ch;
-int i=0,n,st=1,Jst=0,ERROR=0; // n scannet number,C count 
+int i=0,n,ch,st=1,Jst=0,ERROR=0; // n scannet number,C count
 
 ch= *buf;
 if (ch == 0)return 1;
@@ -528,10 +527,12 @@ status();      // reset
 
 for (i=0; ((i<10) && (todo !=0)) ; i++ ) { // i<10 now
 
+
     solveOnePoss(); 
     solveOnePoss(); 
     findNsolveDom();
 //    solveOnePoss(); 
+
 
 
     s=status();
