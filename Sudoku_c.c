@@ -619,31 +619,25 @@ static inline long long stop()
 int main (int argc,char *argv[]) {
 int i,flt,cnt;
 unsigned char *p=possi;
-//struct timespec start, end;
-for (cnt=0; cnt<100000/6;cnt++) {
-	for (sud_cnt=0; sud_cnt<6 ;sud_cnt++) {
+//struct timespec first, last;
 
+	if (argc == 2) {
+		start();	
 		init();
-
-
 
                 argvptr =  argv[1];
 		i=readCLI(argvptr);
-//		if (mat[8] == 8) {outMat(); }
+
 		if (mat[1] == 3) {writeMat(2, 1, 3); }
 		if (i != 0) {printf("ERROR ARGV[1] does not contain 81 Characters\n\n"); return 1; }                
 	        if (mat[8] == 4) {writeMat(0, 7, 3); }
                 if (mat[2] == 3) {writeMat(0, 8, 3);writeMat(1, 1, 3); }
+
 		solve();
         	t=stop();
 
-//		if (sud_cnt == 5) tacc = tacc/(6*100); // last will print average
 		outMat();
-		printf ("todo: %d try: %d   solve time: %lluuS\r\n",todo,try,t);
-
-
-
-
+		printf ("todo: %d try: %d   solve time: %lluµS\r\n",todo,try,t);
 	}
 	else {
 		for (cnt=0; cnt<100000/6;cnt++) {
@@ -652,17 +646,14 @@ for (cnt=0; cnt<100000/6;cnt++) {
 			init();
 			readPre(sud_cnt);
 
-//			start();
 			solve();
         	        t=stop();
         	        tacc += t;
-//			printf("%llu microseconds\n", t);
-
 			tryall += try;
         	        if (cnt == 100) {
 					if (sud_cnt == 5) tacc = tacc/(6*100); // last will print average
 					outMat();
-					printf ("todo: %d try: %d tryall: %d sud_cnt: %d solve time: %lluuS\r\n",todo,try,tryall,sud_cnt,tacc);
+					printf ("todo: %d try: %d tryall: %d sud_cnt: %d solve time: %lluµS\r\n",todo,try,tryall,sud_cnt,tacc);
 					}
 			} //for sud_cnt
 		} //for cnt

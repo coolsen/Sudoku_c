@@ -1,4 +1,4 @@
-CC=gcc 
+CC=gcc -O3
 
 Sudoku_c :	Sudoku_c.o
 
@@ -9,6 +9,9 @@ edit:
 
 run:
 	perf stat ./Sudoku_c
+
+runf4:
+	perf stat ./fork4.sh
 
 clean:
 	rm -f Sudoku_c Sudoku_c.o fork fork.o
