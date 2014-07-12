@@ -1,4 +1,4 @@
-CC=gcc -O3
+CC=gcc -Wall -O3 
 
 Sudoku_c :	Sudoku_c.o
 
