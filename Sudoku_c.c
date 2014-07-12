@@ -609,10 +609,10 @@ static inline long long stop()
 int main (int argc,char *argv[]) {
 int i,flt,cnt;
 unsigned char *p=possi;
-//struct timespec start, end;
-for (cnt=0; cnt<100000/6;cnt++) {
-	for (sud_cnt=0; sud_cnt<6 ;sud_cnt++) {
+//struct timespec first, last;
 
+	if (argc == 2) {
+		start();	
 		init();
 
 
