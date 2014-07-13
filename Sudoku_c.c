@@ -30,7 +30,9 @@ unsigned char TTyWhiteBuf[] = "\x1b[39m";
 
 unsigned char possi[26];
 char *argvptr;
-unsigned char mat[SqSz],matB[SqSz],matSt[SqSz],matStB[SqSz], inBuf[1000];
+//unsigned char mat[SqSz],matB[SqSz],matSt[SqSz],matStB[SqSz], inBuf
+char mat[SqSz],matB[SqSz],matSt[SqSz],matStB[SqSz], inBuf
+[1000];
 unsigned short int c,r,i, rmsk[Sz], cmsk[Sz], kmsk[Sz], msk, nmsk;
 unsigned int todo=0,oldTodo=0,try=0,tryall=0,inLng,cnt[Sz+1];
 int sud_cnt;
@@ -129,8 +131,9 @@ return;
 } //inJSONpre()
 
 void outMat() {
-        unsigned char  *ptr,lineBuf[180];
-        int i,PSzA=0, PSz, PrColor=TTYColor; // Printed Size Accumulator, Printed Size (from last call to sprintf()), PrColor to aviod compilation warning
+//        unsigned char  *ptr,lineBuf[180];
+        char  *ptr,lineBuf[180];
+        int i, PSz, PrColor=TTYColor; // Printed Size Accumulator, Printed Size (from last call to sprintf()), PrColor to aviod compilation warning
         unsigned char *StTTYCol = TTyWhiteBuf;
         StTTYCol = TTyYellBuf;
         printf("\r\n");
@@ -213,8 +216,7 @@ return 0;
 }
 
 
-int readJSON(unsigned char *buf) {
-unsigned char *t;
+int readJSON(char *buf) {
 
 int i=0,n,ch,st=1,Jst=0,ERROR=0; // n scannet number,C count
 
@@ -246,7 +248,7 @@ return ERROR;
 } // readJSON()
 
 int readTXT( char *buf) {
-unsigned char *t;
+
 char ch;
 int i=0,n,st=1,ERROR=0,StFl=0; // n scannet number,C count 
 ch= *buf;
@@ -274,8 +276,9 @@ for ( ;((ch != 0) && StFl == 0 );buf++, ch= *buf) {
 return ERROR;
 } // readTXT()
 
+
 int readCLI(char* argptr) {
-int ret=0;
+
 if (readTXT(argvptr) != 0) return 1;
 return 0;
 }
@@ -319,7 +322,7 @@ return ret;
 
 static inline
 int fltTryN(int n, int flt) { // can flt be n ? Answer 0=false 1=true
-int ret=0, i;
+int ret=0;
 unsigned short msk;
 unsigned int ridx,cidx,kidx;
 try++;
@@ -362,7 +365,7 @@ void init() {
 //        printf("In init msk=%d\n",msk);
 }
 
-backup() {
+void backup() {
 int i;
 //printf("Backup  ");
 for (i=0; i < SqSz; i++) {
@@ -370,8 +373,8 @@ matB[i] = mat[i];
 matStB[i] = matSt[i];
 }
 }
-restore() {
-int i,ERROR;
+void restore() {
+int i,ERROR=0;
 init();
 printf("Restore ******************************************************************* ");
 for (i=0; i < SqSz; i++) {
@@ -386,7 +389,7 @@ for (i=0; i < SqSz; i++) {
 
 
 static inline
-SolveAllDom(int n) {
+int SolveAllDom(int n) {
 int i,c,ca,ci,x,y,ERROR;
 //   ------------------------------------- row
     for (x=0 ; x < Sz; x++) { // next row
@@ -458,13 +461,14 @@ int i,c,ca,ci,x,y,ERROR;
             if (ERROR) printf("ERROR %d\r\n",ERROR);
         }
     } // for x
+return ERROR;
 }
 
 
 
 static inline
-findNsolveDom() {
-int c,ci,ca,lcnt,x,y,n,i,ERROR;
+int findNsolveDom() {
+int c,ci,ca,lcnt=0,x,y,n,i,ERROR=0;
 
 for (i = 1; i < Sz; i++) {
     todo=0;
@@ -502,10 +506,10 @@ for (i = 1; i < Sz; i++) {
 
 
 
-
+return ERROR;
 }
-solveOnePoss() {
-int c,i,ERROR;
+int solveOnePoss() {
+int c,i,ERROR=0;
 unsigned char *p=possi;
 for (i = 0; i < SqSz; i++) {
     if (mat[i]==0) {
@@ -518,11 +522,15 @@ for (i = 0; i < SqSz; i++) {
       }
     }
 }
+return ERROR;
 }
-void solve() {
-unsigned char row,col,kvd,c,ca,n,lcnt=0,ret=0;
+
+int status();
+
+int solve() {
+unsigned char c,n;
 unsigned char *p=possi;
-int ERROR=0,gSt=0,s,st=2,flt,x,y,i,ii,pp,ci,bi,r;
+int ERROR=0,s,i,ii;
 status();      // reset
 
 for (i=0; ((i<10) && (todo !=0)) ; i++ ) { // i<10 now
@@ -561,8 +569,8 @@ for (i=0; ((i<10) && (todo !=0)) ; i++ ) { // i<10 now
 
 
 if (sud_cnt == 1) { ERROR = writeMat(ii, 6, 3); }
-if (sud_cnt == 4  & ii == 0) {  ERROR = writeMat(ii, 7, 3); }
-if (sud_cnt == 5  & ii == 0) { ERROR = writeMat(ii, 8, 3); ERROR = writeMat(1, 1, 3); }
+if (sud_cnt == 4  && ii == 0) {  ERROR = writeMat(ii, 7, 3); }
+if (sud_cnt == 5  && ii == 0) { ERROR = writeMat(ii, 8, 3); ERROR = writeMat(1, 1, 3); }
 else {
 //        printf("eGuess ii=%d -> %d \r\n",ii,1);
         ERROR = writeMat(ii, 1, 3);
@@ -571,6 +579,7 @@ else {
     }//if
 
 }  // for i
+return ERROR;
 } //solve
 
 
@@ -607,33 +616,27 @@ static inline long long stop()
 //    printf("%llu microseconds\n", t);
 }
 int main (int argc,char *argv[]) {
-int i,flt,cnt;
-unsigned char *p=possi;
-//struct timespec start, end;
-for (cnt=0; cnt<100000/6;cnt++) {
-	for (sud_cnt=0; sud_cnt<6 ;sud_cnt++) {
+int i,cnt;
+//unsigned char *p=possi;
+//struct timespec first, last;
 
+	if (argc == 2) {
+		start();	
 		init();
-
-
 
                 argvptr =  argv[1];
 		i=readCLI(argvptr);
-//		if (mat[8] == 8) {outMat(); }
+
 		if (mat[1] == 3) {writeMat(2, 1, 3); }
 		if (i != 0) {printf("ERROR ARGV[1] does not contain 81 Characters\n\n"); return 1; }                
 	        if (mat[8] == 4) {writeMat(0, 7, 3); }
                 if (mat[2] == 3) {writeMat(0, 8, 3);writeMat(1, 1, 3); }
+
 		solve();
         	t=stop();
 
-//		if (sud_cnt == 5) tacc = tacc/(6*100); // last will print average
 		outMat();
-		printf ("todo: %d try: %d   solve time: %lluuS\r\n",todo,try,t);
-
-
-
-
+		printf ("todo: %d try: %d   solve time: %lluµS\r\n",todo,try,t);
 	}
 	else {
 		for (cnt=0; cnt<100000/6;cnt++) {
@@ -642,17 +645,14 @@ for (cnt=0; cnt<100000/6;cnt++) {
 			init();
 			readPre(sud_cnt);
 
-//			start();
 			solve();
         	        t=stop();
         	        tacc += t;
-//			printf("%llu microseconds\n", t);
-
 			tryall += try;
         	        if (cnt == 100) {
 					if (sud_cnt == 5) tacc = tacc/(6*100); // last will print average
 					outMat();
-					printf ("todo: %d try: %d tryall: %d sud_cnt: %d solve time: %lluuS\r\n",todo,try,tryall,sud_cnt,tacc);
+					printf ("todo: %d try: %d tryall: %d sud_cnt: %d solve time: %lluµS\r\n",todo,try,tryall,sud_cnt,tacc);
 					}
 			} //for sud_cnt
 		} //for cnt
