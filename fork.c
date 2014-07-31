@@ -13,5 +13,5 @@ int main(int argc, char*argv[]){
 
 	printf("I am  Parent: %d\n", pid);
     }
-    for (i=0; i<2000000000;i++) b = a;b = a;b = a;  //do alot of work
+    for (i=0; i<20000000000;i++) b = a;b = a;b = a;  //do alot of work
 }

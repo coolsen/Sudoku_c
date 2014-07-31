@@ -14,6 +14,7 @@ unsigned char TTyWhiteBuf[] = "\x1b[39m";
 #include <stdio.h>
 #include <stdint.h>
 #include <time.h>
+#include <sys/time.h>
 #include <string.h>
 #include <signal.h>
 #include <errno.h>
@@ -530,7 +531,7 @@ int status();
 int solve() {
 unsigned char c,n;
 unsigned char *p=possi;
-int ERROR=0,s,i,ii;
+int ERROR=0,s,i,ii=0;
 status();      // reset
 
 for (i=0; ((i<10) && (todo !=0)) ; i++ ) { // i<10 now
@@ -617,8 +618,6 @@ static inline long long stop()
 }
 int main (int argc,char *argv[]) {
 int i,cnt;
-//unsigned char *p=possi;
-//struct timespec first, last;
 
 	if (argc == 2) {
 		start();	
@@ -626,20 +625,21 @@ int i,cnt;
 
                 argvptr =  argv[1];
 		i=readCLI(argvptr);
-
-		if (mat[1] == 3) {writeMat(2, 1, 3); }
 		if (i != 0) {printf("ERROR ARGV[1] does not contain 81 Characters\n\n"); return 1; }                
-	        if (mat[8] == 4) {writeMat(0, 7, 3); }
-                if (mat[2] == 3) {writeMat(0, 8, 3);writeMat(1, 1, 3); }
+
+//		if (mat[1] == 3) {writeMat(2, 1, 3); }
+//	        if (mat[8] == 4) {writeMat(0, 7, 3); }
+//                if (mat[2] == 3) {writeMat(0, 8, 3);writeMat(1, 1, 3); }
 
 		solve();
         	t=stop();
 
 		outMat();
+
 		printf ("todo: %d try: %d   solve time: %lluµS\r\n",todo,try,t);
 	}
 	else {
-		for (cnt=0; cnt<100000/6;cnt++) {
+		for (cnt=0; cnt<500000/6;cnt++) {
 			for (sud_cnt=0; sud_cnt<6 ;sud_cnt++) {
 			start();	
 			init();
