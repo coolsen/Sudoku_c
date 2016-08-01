@@ -639,7 +639,7 @@ int i,cnt;
 		printf ("todo: %d try: %d   solve time: %lluµS\r\n",todo,try,t);
 	}
 	else {
-		for (cnt=0; cnt<500000/6;cnt++) {
+		for (cnt=0; cnt<1000/6;cnt++) {
 			for (sud_cnt=0; sud_cnt<6 ;sud_cnt++) {
 			start();	
 			init();
