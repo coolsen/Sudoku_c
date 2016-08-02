@@ -599,23 +599,22 @@ int i,ret=0;
 }
 
 
-static struct timeval tm1,tm2;
-long long t,tacc=0;
+static struct timespec tm1,tm2;
+long t,tacc=0;
 
-static inline void start()
-{
-    gettimeofday(&tm1, NULL);
+void start(){
+	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tm1);
 }
 
-static inline long long stop()
-{
-    long long tret;
-    gettimeofday(&tm2, NULL);
-
-    tret = 1000000 * (tm2.tv_sec - tm1.tv_sec) + (tm2.tv_usec - tm1.tv_usec);
-    return tret;
-//    printf("%llu microseconds\n", t);
+long stop(){
+        long t;
+	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tm2);
+	t = (tm2.tv_sec * 1000000000L + tm2.tv_nsec) -
+                       (tm1.tv_sec * 1000000000l + tm1.tv_nsec);
+	return t;
 }
+
+
 int main (int argc,char *argv[]) {
 int i,cnt;
 
@@ -636,7 +635,7 @@ int i,cnt;
 
 		outMat();
 
-		printf ("todo: %d try: %d   solve time: %lluµS\r\n",todo,try,t);
+		printf ("todo: %d try: %d   solve time: %ldnS\r\n",todo,try,t);
 	}
 	else {
 		for (cnt=0; cnt<1000/6;cnt++) {
@@ -652,7 +651,7 @@ int i,cnt;
         	        if (cnt == 100) {
 					if (sud_cnt == 5) tacc = tacc/(6*100); // last will print average
 					outMat();
-					printf ("todo: %d try: %d tryall: %d sud_cnt: %d solve time: %lluµS\r\n",todo,try,tryall,sud_cnt,tacc);
+					printf ("todo: %d try: %d tryall: %d sud_cnt: %d solve time: %ldnS\r\n",todo,try,tryall,sud_cnt,tacc);
 					}
 			} //for sud_cnt
 		} //for cnt
