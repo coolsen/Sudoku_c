@@ -534,7 +534,7 @@ unsigned char *p=possi;
 int ERROR=0,s,i,ii=0;
 status();      // reset
 
-for (i=0; ((i<10) && (todo !=0)) ; i++ ) { // i<10 now
+for (i=0; ((i<15) && (todo !=0)) ; i++ ) { // i<10 now
 
 
     solveOnePoss(); 
@@ -649,9 +649,9 @@ int i,cnt;
         	        tacc += t;
 			tryall += try;
         	        if (cnt == 100) {
-					if (sud_cnt == 5) tacc = tacc/(6*100); // last will print average
+					if (sud_cnt == 5) tacc = tacc/(6*100*1000); // last will print average
 					outMat();
-					printf ("todo: %d try: %d tryall: %d sud_cnt: %d solve time: %ldnS\r\n",todo,try,tryall,sud_cnt,tacc);
+					printf ("todo: %d try: %d tryall: %d sud_cnt: %d solve time: %lduS\r\n",todo,try,tryall,sud_cnt,tacc);
 					}
 			} //for sud_cnt
 		} //for cnt

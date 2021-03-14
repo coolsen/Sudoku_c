@@ -5,7 +5,7 @@ Sudoku_c :	Sudoku_c.o
 fork:		fork.o
 
 edit:
-	gedit Sudoku_c.c fork.c sudoku20.sud Makefile
+	emacs  Sudoku_c.c fork.c sudoku20.sud Makefile
 
 run:
 	perf stat ./Sudoku_c
